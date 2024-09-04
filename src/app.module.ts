@@ -6,6 +6,7 @@ import { FoodsModule } from './foods/foods.module';
 import { FoodOptionsModule } from './food-options/food-options.module';
 import { OptionChoicesModule } from './option-choices/option-choices.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -24,6 +25,7 @@ import configuration from './config/configuration';
     FoodsModule,
     FoodOptionsModule,
     OptionChoicesModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
