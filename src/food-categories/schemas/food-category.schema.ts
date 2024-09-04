@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type FoodCategoriesDocument = HydratedDocument<FoodCategories>;
+export type FoodCategoryDocument = HydratedDocument<FoodCategory>;
 
 @Schema({
   collection: 'food_categories',
@@ -9,7 +9,7 @@ export type FoodCategoriesDocument = HydratedDocument<FoodCategories>;
   toJSON: { versionKey: false },
   toObject: { versionKey: false },
 })
-export class FoodCategories {
+export class FoodCategory {
   @Prop({ required: true, unique: true })
   category_id: string;
 
@@ -23,5 +23,4 @@ export class FoodCategories {
   updated_at: Date;
 }
 
-export const FoodCategoriesSchema =
-  SchemaFactory.createForClass(FoodCategories);
+export const FoodCategorySchema = SchemaFactory.createForClass(FoodCategory);

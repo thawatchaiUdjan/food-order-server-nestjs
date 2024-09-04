@@ -3,16 +3,16 @@ import { FoodCategoriesService } from './food-categories.service';
 import { FoodCategoriesController } from './food-categories.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
-  FoodCategories,
-  FoodCategoriesSchema,
-} from './schemas/food-categories.schema';
+  FoodCategory,
+  FoodCategorySchema,
+} from './schemas/food-category.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       {
-        name: FoodCategories.name,
-        schema: FoodCategoriesSchema,
+        name: FoodCategory.name,
+        schema: FoodCategorySchema,
       },
     ]),
   ],

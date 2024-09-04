@@ -2,22 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { CreateFoodCategoryDto } from './dto/create-food-category.dto';
 import { UpdateFoodCategoryDto } from './dto/update-food-category.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { FoodCategories } from './schemas/food-categories.schema';
+import { FoodCategory } from './schemas/food-category.schema';
 import { Model } from 'mongoose';
 
 @Injectable()
 export class FoodCategoriesService {
   constructor(
-    @InjectModel(FoodCategories.name)
-    private foodCategories: Model<FoodCategories>,
+    @InjectModel(FoodCategory.name)
+    private foodCategoryModel: Model<FoodCategory>,
   ) {}
 
   create(createFoodCategoryDto: CreateFoodCategoryDto) {
     return 'This action adds a new foodCategory';
   }
 
-  async findAll(): Promise<FoodCategories[]> {
-    return this.foodCategories.find().exec();
+  async findAll(): Promise<FoodCategory[]> {
+    return this.foodCategoryModel.find().exec();
   }
 
   findOne(id: string) {
