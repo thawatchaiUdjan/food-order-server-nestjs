@@ -3,6 +3,7 @@ import { User } from 'src/users/schemas/user.schema';
 declare module 'express' {
   export interface Request {
     user?: User;
+    token?: string;
   }
 }
 

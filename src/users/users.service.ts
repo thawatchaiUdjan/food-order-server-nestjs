@@ -85,8 +85,9 @@ export class UsersService {
     }
   }
 
-  async findOne(userId: string): Promise<User> {
-    return this.userModel.findOne({ user_id: userId }).exec();
+  async findOne(userId: string, token: string): Promise<UserData> {
+    const result = await this.userModel.findOne({ user_id: userId });
+    return { user: result, token: token };
   }
 
   async findAll(): Promise<User[]> {

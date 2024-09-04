@@ -43,7 +43,7 @@ export class UsersController {
   @Get()
   @UseGuards(UsersGuard)
   findOne(@Req() req: Request) {
-    return this.usersService.findOne(req.user.user_id);
+    return this.usersService.findOne(req.user.user_id, req.token);
   }
 
   @Put()

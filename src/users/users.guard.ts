@@ -28,6 +28,7 @@ export class UsersGuard implements CanActivate {
         secret: this.configService.get<string>('jwtSecret'),
       });
       request.user = payload.user;
+      request.token = token;
     } catch (err) {
       if (
         err.name == this.configService.get<string>('token.tokenExpiredError')
