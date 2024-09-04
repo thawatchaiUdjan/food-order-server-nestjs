@@ -15,10 +15,17 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { UsersGuard } from './users.guard';
 import { Request } from 'express';
 import { User } from './schemas/user.schema';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Get('verify-token')
+  @UseGuards(UsersGuard)
+  verifyToken() {
+    return 'verify complete';
+  }
 
   @Post('login')
   login(@Body() loginUserDto: LoginUserDto) {
