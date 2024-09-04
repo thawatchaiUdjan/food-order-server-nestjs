@@ -16,7 +16,7 @@ import { UsersGuard } from './users.guard';
 import { Request } from 'express';
 import { User } from './schemas/user.schema';
 
-@Controller('users')
+@Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -34,8 +34,9 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @UseGuards(UsersGuard)
+  findOne(@Req() req: Request) {
+    return this.usersService.findOne(req.user.user_id);
   }
 
   @Put()
