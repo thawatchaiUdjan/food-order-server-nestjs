@@ -4,4 +4,9 @@ export default () => ({
   database: {
     host: process.env.DB_CONNECTION_STRING_MONGO,
   },
+  encryptSaltRounds: 10,
+  token: {
+    tokenExpiredError: 'TokenExpiredError',
+    tokenExpiredTime: '6h',
+  },
 });

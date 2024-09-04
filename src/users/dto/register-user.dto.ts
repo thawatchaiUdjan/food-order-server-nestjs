@@ -6,10 +6,9 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class CreateUserDto {
-  @IsString()
-  @IsNotEmpty()
-  readonly user_id: string;
+export class RegisterUserDto {
+  @IsOptional()
+  user_id: string;
 
   @IsString()
   @IsNotEmpty()
@@ -17,9 +16,9 @@ export class CreateUserDto {
   readonly username: string;
 
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   @MaxLength(100)
-  readonly password?: string;
+  password: string;
 
   @IsString()
   @IsNotEmpty()

@@ -28,7 +28,15 @@ export class User {
   @Prop({ default: 0 })
   balance: number;
 
-  @Prop()
+  @Prop({
+    type: {
+      address: { type: String },
+      latlng: {
+        lat: { type: Number },
+        lng: { type: Number },
+      },
+    },
+  })
   location: {
     address: string;
     latlng: {

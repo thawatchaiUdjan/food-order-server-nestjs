@@ -6,12 +6,15 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { FoodsService } from './foods.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
+import { UsersGuard } from 'src/users/users.guard';
 
 @Controller('foods')
+@UseGuards(UsersGuard)
 export class FoodsController {
   constructor(private readonly foodsService: FoodsService) {}
 
