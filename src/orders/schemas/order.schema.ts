@@ -61,16 +61,16 @@ export class OrderModelFactory {
 
   public createOrderSchema() {
     OrderSchema.pre(
-      'findOneAndDelete',
-      handleFindOneAndDelete(this.orderFoodModel),
+      ['findOneAndDelete', 'deleteMany'],
+      handleDelete(this.orderFoodModel),
     );
     return OrderSchema;
   }
 }
 
-function handleFindOneAndDelete(orderFoodModel: Model<OrderFood>) {
+function handleDelete(orderFoodModel: Model<OrderFood>) {
   return async function (next: () => void) {
-    const orderId = this.getQuery()['order_id'];
+    const orderId = this.getQuery().order_id;
     await orderFoodModel.deleteMany({ order_id: orderId });
     next();
   };
