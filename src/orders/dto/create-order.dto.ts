@@ -8,13 +8,12 @@ import {
 import { Food } from 'src/foods/schemas/food.schema';
 import { Order } from '../schemas/order.schema';
 
-export class CreateOrderDto {
-  @IsNotEmpty()
-  @IsArray()
-  readonly foods: FoodCart[];
+export class FoodCartOption {
+  @IsString()
+  readonly option_string: string;
 
-  @IsNotEmpty()
-  order: Order;
+  @IsString()
+  readonly option_note: string;
 }
 
 export class FoodCart {
@@ -34,10 +33,11 @@ export class FoodCart {
   readonly option: FoodCartOption;
 }
 
-export class FoodCartOption {
-  @IsString()
-  readonly option_string: string;
+export class CreateOrderDto {
+  @IsNotEmpty()
+  @IsArray()
+  readonly foods: FoodCart[];
 
-  @IsString()
-  readonly option_note: string;
+  @IsNotEmpty()
+  order: Order;
 }
