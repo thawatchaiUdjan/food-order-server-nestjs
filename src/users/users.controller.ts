@@ -14,8 +14,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UsersGuard } from './users.guard';
 import { Request } from 'express';
-import { User } from './schemas/user.schema';
-import { JwtService } from '@nestjs/jwt';
 
 @Controller('user')
 export class UsersController {
@@ -53,7 +51,8 @@ export class UsersController {
   }
 
   @Delete()
-  remove() {
-    return this.usersService.remove();
+  @UseGuards(UsersGuard)
+  remove(@Req() req: Request) {
+    return this.usersService.remove(req.user.user_id);
   }
 }

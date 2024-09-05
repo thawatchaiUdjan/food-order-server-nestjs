@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -11,12 +12,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
 import { generateUuid, hashPassword, verifyPassword } from 'src/common/utils';
 import { JwtService } from '@nestjs/jwt';
-import { UpdateUserRes, UserData } from 'src/types/interfaces';
+import { MessageRes, UpdateUserRes, UserData } from 'src/types/interfaces';
+import { Order } from 'src/orders/schemas/order.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Order.name) private orderModel: Model<Order>,
     private configService: ConfigService,
     private jwtService: JwtService,
   ) {}
@@ -65,8 +68,13 @@ export class UsersService {
     return { user: result, message: 'User data successfully updated' };
   }
 
-  remove() {
-    return `This action removes a user`;
+  async remove(userId: string): Promise<MessageRes> {
+    const order = this.orderModel.findOne({ user_id: userId });
+    if (order) {
+      throw new BadRequestException('account have an order, cant be delete');
+    }
+    await this.userModel.deleteOne({ user_id: userId });
+    return { message: 'Delete account successfully' };
   }
 
   async findUser(username: string): Promise<User> {
