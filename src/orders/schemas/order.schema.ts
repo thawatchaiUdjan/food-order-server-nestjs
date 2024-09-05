@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
 import { OrderFood } from './order-food.schema';
+import { OrderStatus } from 'src/order-status/schemas/order-status.schema';
 
 export type OrderDocument = HydratedDocument<Order>;
 
 @Schema({
+  collection: 'orders',
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
   toJSON: { versionKey: false },
   toObject: { versionKey: false },
@@ -28,7 +30,7 @@ export class Order {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'order_statuses',
+    ref: OrderStatus.name,
     required: true,
   })
   order_status: mongoose.Schema.Types.ObjectId;

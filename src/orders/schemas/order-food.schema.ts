@@ -4,6 +4,7 @@ import { HydratedDocument } from 'mongoose';
 export type OrderFoodDocument = HydratedDocument<OrderFood>;
 
 @Schema({
+  collection: 'order_foods',
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
   toJSON: { versionKey: false },
   toObject: { versionKey: false },

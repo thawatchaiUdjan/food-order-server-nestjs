@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { FoodCategoriesModule } from './food-categories/food-categories.module';
 import { OrdersModule } from './orders/orders.module';
+import { OrderStatusModule } from './order-status/order-status.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -30,6 +31,7 @@ import configuration from './config/configuration';
     UsersModule,
     FoodCategoriesModule,
     OrdersModule,
+    OrderStatusModule,
   ],
   controllers: [AppController],
   providers: [AppService],
