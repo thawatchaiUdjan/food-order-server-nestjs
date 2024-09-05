@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { FoodCategoriesModule } from './food-categories/food-categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { OrderStatusModule } from './order-status/order-status.module';
+import { DeliveryOptionModule } from './delivery-option/delivery-option.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -32,6 +33,7 @@ import configuration from './config/configuration';
     FoodCategoriesModule,
     OrdersModule,
     OrderStatusModule,
+    DeliveryOptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

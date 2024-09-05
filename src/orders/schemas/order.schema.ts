@@ -3,6 +3,7 @@ import { InjectModel, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
 import { OrderFood } from './order-food.schema';
 import { OrderStatus } from 'src/order-status/schemas/order-status.schema';
+import { DeliveryOption } from 'src/delivery-option/schemas/delivery-option.schema';
 
 export type OrderDocument = HydratedDocument<Order>;
 
@@ -37,7 +38,7 @@ export class Order {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'delivery_options',
+    ref: DeliveryOption.name,
     required: true,
   })
   order_delivery_option: mongoose.Schema.Types.ObjectId;
