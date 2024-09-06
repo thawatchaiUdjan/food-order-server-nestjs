@@ -1,3 +1,4 @@
+import { Food } from 'src/foods/schemas/food.schema';
 import { OrderFood } from 'src/orders/schemas/order-food.schema';
 import { Order } from 'src/orders/schemas/order.schema';
 import { User } from 'src/users/schemas/user.schema';
@@ -36,5 +37,10 @@ export interface UpdateOrderRes {
 export interface CreateOrderRes {
   foodOrder: FoodOrderRes;
   user: UserData;
+  message: string;
+}
+
+export interface CreateFoodRes {
+  food: Food;
   message: string;
 }

@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -13,17 +14,14 @@ export class CreateFoodDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(45)
-  readonly food_id: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(45)
   readonly food_name: string;
 
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   readonly food_price: number;
 
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   readonly food_price_discount: number;

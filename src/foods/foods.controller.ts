@@ -7,11 +7,17 @@ import {
   Delete,
   Put,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  Req,
 } from '@nestjs/common';
 import { FoodsService } from './foods.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
 import { UsersGuard } from 'src/users/users.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { foodStorage } from 'src/config/multer.config';
+import { Request } from 'express';
 
 @Controller('foods')
 @UseGuards(UsersGuard)
@@ -19,8 +25,13 @@ export class FoodsController {
   constructor(private readonly foodsService: FoodsService) {}
 
   @Post()
-  create(@Body() createFoodDto: CreateFoodDto) {
-    return this.foodsService.create(createFoodDto);
+  @UseInterceptors(FileInterceptor('food_image_url', { storage: foodStorage }))
+  create(
+    @Req() req: Request,
+    @Body() createFoodDto: CreateFoodDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.foodsService.create(createFoodDto, req, file);
   }
 
   @Get()
@@ -34,8 +45,13 @@ export class FoodsController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateFoodDto: UpdateFoodDto) {
-    return this.foodsService.update(id, updateFoodDto);
+  @UseInterceptors(FileInterceptor('food_image_url'))
+  update(
+    @Param('id') id: string,
+    @Body() updateFoodDto: UpdateFoodDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.foodsService.update(id, updateFoodDto, file);
   }
 
   @Delete(':id')

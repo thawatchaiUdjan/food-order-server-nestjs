@@ -9,4 +9,14 @@ export default () => ({
     tokenExpiredError: 'TokenExpiredError',
     tokenExpiredTime: '6h',
   },
+  hash: {
+    hashAlgorithm: 'sha256',
+    hashEncoding: 'base64url',
+  },
+  uploadImage: {
+    format: 'png',
+    folders: {
+      food: 'foods',
+    },
+  },
 });
