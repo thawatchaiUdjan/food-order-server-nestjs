@@ -9,7 +9,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { ConfigService } from '@nestjs/config';
 import { generateUuid, hashPassword, verifyPassword } from 'src/common/utils';
 import { JwtService } from '@nestjs/jwt';
 import { MessageRes, UpdateUserRes, UserData } from 'src/types/interfaces';
@@ -20,8 +19,7 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Order.name) private orderModel: Model<Order>,
-    private configService: ConfigService,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async login(username: string, password: string): Promise<UserData> {
@@ -46,10 +44,7 @@ export class UsersService {
     const user = await this.findUser(registerUserDto.username);
     if (!user) {
       const userId = generateUuid();
-      const hashedPassword = await hashPassword(
-        registerUserDto.password,
-        this.configService.get<number>('encryptSaltRounds'),
-      );
+      const hashedPassword = await hashPassword(registerUserDto.password);
       registerUserDto.user_id = userId;
       registerUserDto.password = hashedPassword;
       const result = await new this.userModel(registerUserDto).save();

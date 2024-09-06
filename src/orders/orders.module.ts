@@ -1,18 +1,29 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Order, OrderModelFactory } from './schemas/order.schema';
+import { getModelToken, MongooseModule } from '@nestjs/mongoose';
+import { Order } from './schemas/order.schema';
 import { OrderFood, OrderFoodSchema } from './schemas/order-food.schema';
+import { orderSchemaFactory } from './order-model.factory';
+import { Model } from 'mongoose';
+import { OrderStatusModule } from 'src/order-status/order-status.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
+    forwardRef(() => UsersModule),
+    OrderStatusModule,
     MongooseModule.forFeatureAsync([
       {
         name: Order.name,
-        inject: [OrderModelFactory],
-        useFactory: (orderModelFactory: OrderModelFactory) =>
-          orderModelFactory.createOrderSchema(),
+        inject: [getModelToken(OrderFood.name)],
+        imports: [
+          MongooseModule.forFeature([
+            { name: OrderFood.name, schema: OrderFoodSchema },
+          ]),
+        ],
+        useFactory: (orderFoodModel: Model<OrderFood>) =>
+          orderSchemaFactory(orderFoodModel),
       },
     ]),
     MongooseModule.forFeature([
@@ -21,5 +32,6 @@ import { OrderFood, OrderFoodSchema } from './schemas/order-food.schema';
   ],
   controllers: [OrdersController],
   providers: [OrdersService],
+  exports: [MongooseModule],
 })
 export class OrdersModule {}

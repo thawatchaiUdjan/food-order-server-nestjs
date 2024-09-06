@@ -1,7 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Model } from 'mongoose';
-import { OrderFood } from './order-food.schema';
 import { OrderStatus } from 'src/order-status/schemas/order-status.schema';
 import { DeliveryOption } from 'src/delivery-option/schemas/delivery-option.schema';
 
@@ -51,27 +49,3 @@ export class Order {
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
-
-@Injectable()
-export class OrderModelFactory {
-  constructor(
-    @InjectModel(OrderFood.name)
-    private orderFoodModel: Model<OrderFood>,
-  ) {}
-
-  public createOrderSchema() {
-    OrderSchema.pre(
-      ['findOneAndDelete', 'deleteMany'],
-      handleDelete(this.orderFoodModel),
-    );
-    return OrderSchema;
-  }
-}
-
-function handleDelete(orderFoodModel: Model<OrderFood>) {
-  return async function (next: () => void) {
-    const orderId = this.getQuery().order_id;
-    await orderFoodModel.deleteMany({ order_id: orderId });
-    next();
-  };
-}

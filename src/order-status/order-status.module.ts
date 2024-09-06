@@ -12,5 +12,6 @@ import { OrderStatus, OrderStatusSchema } from './schemas/order-status.schema';
   ],
   controllers: [OrderStatusController],
   providers: [OrderStatusService],
+  exports: [MongooseModule],
 })
 export class OrderStatusModule {}

@@ -19,7 +19,7 @@ export class OrdersService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<Order>,
     @InjectModel(OrderFood.name) private orderFoodModel: Model<OrderFood>,
-    @InjectModel(OrderFood.name) private orderStatusModel: Model<OrderStatus>,
+    @InjectModel(OrderStatus.name) private orderStatusModel: Model<OrderStatus>,
     private readonly userService: UsersService,
   ) {}
 
@@ -91,17 +91,17 @@ export class OrdersService {
     return { message: 'Order successfully canceled' };
   }
 
-  async findAll(): Promise<FoodOrderRes[]> {
+  async findAll(): Promise<any[]> {
     const result = await this.findOrders();
 
     for (const order of result) {
-      order.foods = await this.findFoodByOrderId(order.order.order_id);
+      order.foods = await this.findFoodByOrderId(order.order_id);
     }
 
     return result;
   }
 
-  async findOrders(): Promise<FoodOrderRes[]> {
+  async findOrders(): Promise<any[]> {
     return this.orderModel
       .aggregate([
         {
@@ -131,7 +131,6 @@ export class OrdersService {
         { $unwind: '$user' },
         { $unwind: '$status' },
         { $unwind: '$delivery_option' },
-        { $addFields: { foods: [] } },
         {
           $replaceRoot: {
             newRoot: {
