@@ -8,7 +8,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Order } from './schemas/order.schema';
 import mongoose, { Model } from 'mongoose';
 import { OrderFood } from './schemas/order-food.schema';
-import { FoodOrderRes, MessageRes, updateOrderRes } from 'src/types/interfaces';
+import {
+  CreateOrderRes,
+  FoodOrderRes,
+  MessageRes,
+  UpdateOrderRes,
+} from 'src/types/interfaces';
 import { User } from 'src/users/schemas/user.schema';
 import { OrderStatus } from 'src/order-status/schemas/order-status.schema';
 import { generateUuid } from 'src/common/utils';
@@ -23,7 +28,10 @@ export class OrdersService {
     private readonly userService: UsersService,
   ) {}
 
-  async create(user: User, createOrderDto: CreateOrderDto) {
+  async create(
+    user: User,
+    createOrderDto: CreateOrderDto,
+  ): Promise<CreateOrderRes> {
     const order = createOrderDto.order;
     const foods = createOrderDto.foods;
     if (user.balance >= order.total_price) {
@@ -67,7 +75,7 @@ export class OrdersService {
   async update(
     id: string,
     status: mongoose.Schema.Types.ObjectId,
-  ): Promise<updateOrderRes> {
+  ): Promise<UpdateOrderRes> {
     const result = await this.orderModel.findOneAndUpdate(
       { order_id: id },
       { order_status: status },

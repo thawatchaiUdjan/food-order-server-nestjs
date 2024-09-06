@@ -28,7 +28,13 @@ export interface FoodOrderRes {
   foods: OrderFood[];
 }
 
-export interface updateOrderRes {
+export interface UpdateOrderRes {
   order: Order;
+  message: string;
+}
+
+export interface CreateOrderRes {
+  foodOrder: FoodOrderRes;
+  user: UserData;
   message: string;
 }
