@@ -33,7 +33,7 @@ export class CreateFoodDto {
   @IsString()
   @IsOptional()
   @MaxLength(255)
-  readonly food_image_url?: string;
+  food_image_url?: string;
 
   @IsString()
   @IsOptional()

@@ -16,8 +16,8 @@ import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
 import { UsersGuard } from 'src/users/users.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { foodStorage } from 'src/config/multer.config';
 import { Request } from 'express';
+import { foodStorage } from 'src/config/multer.config';
 
 @Controller('foods')
 @UseGuards(UsersGuard)
@@ -25,7 +25,11 @@ export class FoodsController {
   constructor(private readonly foodsService: FoodsService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('food_image_url', { storage: foodStorage }))
+  @UseInterceptors(
+    FileInterceptor('food_image_url', {
+      storage: foodStorage,
+    }),
+  )
   create(
     @Req() req: Request,
     @Body() createFoodDto: CreateFoodDto,
@@ -45,7 +49,11 @@ export class FoodsController {
   }
 
   @Put(':id')
-  @UseInterceptors(FileInterceptor('food_image_url'))
+  @UseInterceptors(
+    FileInterceptor('food_image_url', {
+      storage: foodStorage,
+    }),
+  )
   update(
     @Param('id') id: string,
     @Body() updateFoodDto: UpdateFoodDto,

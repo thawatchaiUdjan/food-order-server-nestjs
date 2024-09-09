@@ -12,6 +12,7 @@ import { OrdersModule } from './orders/orders.module';
 import { OrderStatusModule } from './order-status/order-status.module';
 import { DeliveryOptionModule } from './delivery-option/delivery-option.module';
 import configuration from './config/configuration';
+import { UtilsModule } from './utils/utils.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import configuration from './config/configuration';
     OrdersModule,
     OrderStatusModule,
     DeliveryOptionModule,
+    UtilsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

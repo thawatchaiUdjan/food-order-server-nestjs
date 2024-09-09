@@ -16,8 +16,8 @@ import {
 } from 'src/types/interfaces';
 import { User } from 'src/users/schemas/user.schema';
 import { OrderStatus } from 'src/order-status/schemas/order-status.schema';
-import { generateUuid } from 'src/common/utils';
 import { UsersService } from 'src/users/users.service';
+import { UtilsService } from 'src/utils/utils.service';
 
 @Injectable()
 export class OrdersService {
@@ -26,6 +26,7 @@ export class OrdersService {
     @InjectModel(OrderFood.name) private orderFoodModel: Model<OrderFood>,
     @InjectModel(OrderStatus.name) private orderStatusModel: Model<OrderStatus>,
     private readonly userService: UsersService,
+    private readonly utils: UtilsService,
   ) {}
 
   async create(
@@ -35,7 +36,7 @@ export class OrdersService {
     const order = createOrderDto.order;
     const foods = createOrderDto.foods;
     if (user.balance >= order.total_price) {
-      order.order_id = generateUuid();
+      order.order_id = this.utils.generateUuid();
       order.user_id = user.user_id;
       order.order_status = await this.findDefaultOrderStatusId();
       const balance = parseFloat((user.balance - order.total_price).toFixed(2));

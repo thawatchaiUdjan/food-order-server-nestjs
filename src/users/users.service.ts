@@ -9,10 +9,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { generateUuid, hashPassword, verifyPassword } from 'src/common/utils';
 import { JwtService } from '@nestjs/jwt';
 import { MessageRes, UpdateUserRes, UserData } from 'src/types/interfaces';
 import { Order } from 'src/orders/schemas/order.schema';
+import { UtilsService } from 'src/utils/utils.service';
 
 @Injectable()
 export class UsersService {
@@ -20,12 +20,13 @@ export class UsersService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Order.name) private orderModel: Model<Order>,
     private readonly jwtService: JwtService,
+    private readonly utils: UtilsService,
   ) {}
 
   async login(username: string, password: string): Promise<UserData> {
     const user = await this.findUser(username);
     if (user) {
-      const isMatch = await verifyPassword(password, user.password);
+      const isMatch = await this.utils.verifyPassword(password, user.password);
       if (isMatch) {
         const token = await this.jwtService.signAsync({ user: user });
         return {
@@ -43,8 +44,10 @@ export class UsersService {
   async register(registerUserDto: RegisterUserDto): Promise<UserData> {
     const user = await this.findUser(registerUserDto.username);
     if (!user) {
-      const userId = generateUuid();
-      const hashedPassword = await hashPassword(registerUserDto.password);
+      const userId = this.utils.generateUuid();
+      const hashedPassword = await this.utils.hashPassword(
+        registerUserDto.password,
+      );
       registerUserDto.user_id = userId;
       registerUserDto.password = hashedPassword;
       const result = await new this.userModel(registerUserDto).save();

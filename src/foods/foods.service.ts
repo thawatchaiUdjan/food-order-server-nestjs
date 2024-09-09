@@ -5,15 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Food } from './schemas/food.schema';
 import { Model } from 'mongoose';
 import { Request } from 'express';
-import { deleteImageFile, getFoodIdFromReq } from 'src/common/utils';
 import { CreateFoodRes, MessageRes } from 'src/types/interfaces';
-import { ConfigService } from '@nestjs/config';
+import { UtilsService } from 'src/utils/utils.service';
 
 @Injectable()
 export class FoodsService {
   constructor(
     @InjectModel(Food.name) private foodModel: Model<Food>,
-    private readonly configService: ConfigService,
+    private readonly utils: UtilsService,
   ) {}
 
   async create(
@@ -21,12 +20,11 @@ export class FoodsService {
     req: Request,
     file: Express.Multer.File,
   ): Promise<CreateFoodRes> {
-    const foodImgUrl = file ? file.path : '';
-    const foodId = getFoodIdFromReq(req);
+    if (file) createFoodDto.food_image_url = file.path;
+    const foodId = this.utils.getFoodIdFromReq(req);
     const food = await new this.foodModel({
       ...createFoodDto,
       food_id: foodId,
-      food_image_url: foodImgUrl,
     }).save();
     const result = await food.populate({
       path: 'food_options',
@@ -63,10 +61,10 @@ export class FoodsService {
     updateFoodDto: UpdateFoodDto,
     file: Express.Multer.File,
   ): Promise<CreateFoodRes> {
-    const foodImgUrl = file ? file.path : '';
+    if (file) updateFoodDto.food_image_url = file.path;
     const food = await this.foodModel.findOneAndUpdate(
       { food_id: id },
-      { ...updateFoodDto, food_image_url: foodImgUrl },
+      { ...updateFoodDto },
       { new: true },
     );
     if (!food) {
@@ -83,13 +81,11 @@ export class FoodsService {
 
   async remove(id: string): Promise<MessageRes> {
     const food = await this.foodModel.findOneAndDelete({ food_id: id });
-    const foodFolder = this.configService.get<string>(
-      'uploadImage.folders.food',
-    );
+    const foodFolder = 'foods';
     if (!food) {
       throw new NotFoundException('Food item to delete not found');
     }
-    await deleteImageFile(food.food_image_url, foodFolder);
+    await this.utils.deleteImageFile(food.food_image_url, foodFolder);
     return { message: 'Food item successfully deleted' };
   }
 }

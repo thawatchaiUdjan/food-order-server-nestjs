@@ -1,9 +1,27 @@
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { cloudinary } from './cloudinary.config';
-import { generateHash, getFoodIdFromReq } from 'src/common/utils';
-import { ConfigService } from '@nestjs/config';
+import { Request } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import * as crypto from 'crypto';
 
-const configService = new ConfigService();
+function generateUuid(): string {
+  return uuidv4();
+}
+
+function generateHash(input: string): string {
+  const algorithm = 'sha256';
+  const encoding = 'base64url';
+  return crypto.createHash(algorithm).update(input).digest(encoding);
+}
+
+function getFoodIdFromReq(req: Request): string {
+  let foodId = req.params.id;
+  if (!foodId) {
+    foodId = generateUuid();
+    req.params.id = foodId;
+  }
+  return foodId;
+}
 
 export const foodStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -11,8 +29,8 @@ export const foodStorage = new CloudinaryStorage({
     const foodId = getFoodIdFromReq(req);
     const publicId = generateHash(foodId);
     return {
-      folder: configService.get<string>('uploadImage.folders.food'),
-      format: configService.get<string>('uploadImage.format'),
+      folder: 'foods',
+      format: 'png',
       public_id: publicId,
     };
   },
