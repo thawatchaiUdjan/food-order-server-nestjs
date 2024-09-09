@@ -84,6 +84,7 @@ export class UsersService {
         user_id: userId,
         username: payload.sub,
         name: payload.name,
+        profile_image_url: payload.picture,
       }).save();
       const token = await this.jwtService.signAsync({ user: newUser });
       return {
@@ -107,6 +108,7 @@ export class UsersService {
         user_id: userId,
         username: userData.id,
         name: userData.displayName,
+        profile_image_url: userData.photos[0].value,
       }).save();
       const token = await this.jwtService.signAsync({ user: newUser });
       return {
@@ -119,17 +121,21 @@ export class UsersService {
   async update(
     user: User,
     updateUserDto: UpdateUserDto,
+    file: Express.Multer.File,
   ): Promise<UpdateUserRes> {
+    if (file) updateUserDto.profile_image_url = file.path;
     const result = await this.updateUser(user.user_id, updateUserDto);
     return { user: result, message: 'User data successfully updated' };
   }
 
   async remove(userId: string): Promise<MessageRes> {
-    const order = this.orderModel.findOne({ user_id: userId });
+    const order = await this.orderModel.findOne({ user_id: userId }).exec();
+    const profileFolder = 'profiles';
     if (order) {
       throw new BadRequestException('account have an order, cant be delete');
     }
-    await this.userModel.deleteOne({ user_id: userId });
+    const user = await this.userModel.findOneAndDelete({ user_id: userId });
+    await this.utils.deleteImageFile(user.profile_image_url, profileFolder);
     return { message: 'Delete account successfully' };
   }
 

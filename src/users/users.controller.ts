@@ -7,6 +7,8 @@ import {
   Put,
   UseGuards,
   Req,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -18,6 +20,8 @@ import { GoogleLoginUserDto } from './dto/google-login-user.dto';
 import { FacebookGuard } from './guards/facebook.guard';
 import { Profile } from 'passport-facebook-token';
 import { User } from './schemas/user.schema';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { profileStorage } from 'src/config/multer.config';
 
 @Controller('user')
 export class UsersController {
@@ -61,8 +65,17 @@ export class UsersController {
 
   @Put()
   @UseGuards(UsersGuard)
-  update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(req.user as User, updateUserDto);
+  @UseInterceptors(
+    FileInterceptor('profile_image_url', {
+      storage: profileStorage,
+    }),
+  )
+  update(
+    @Req() req: Request,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.usersService.update(req.user as User, updateUserDto, file);
   }
 
   @Delete()

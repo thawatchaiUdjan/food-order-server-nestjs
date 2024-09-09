@@ -41,4 +41,9 @@ export class RegisterUserDto {
       readonly lng?: number;
     };
   };
+
+  @IsString()
+  @MaxLength(255)
+  @IsOptional()
+  profile_image_url?: string;
 }

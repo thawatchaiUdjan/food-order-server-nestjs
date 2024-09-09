@@ -45,6 +45,9 @@ export class User {
     };
   };
 
+  @Prop({ maxlength: 255 })
+  profile_image_url?: string;
+
   @Prop({ default: Date.now })
   created_at: Date;
 
