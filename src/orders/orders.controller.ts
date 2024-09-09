@@ -12,9 +12,10 @@ import {
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { UsersGuard } from 'src/users/users.guard';
+import { UsersGuard } from 'src/users/guards/users.guard';
 import { Request } from 'express';
 import mongoose from 'mongoose';
+import { User } from 'src/users/schemas/user.schema';
 
 @Controller('orders')
 @UseGuards(UsersGuard)
@@ -23,7 +24,7 @@ export class OrdersController {
 
   @Post()
   create(@Req() req: Request, @Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(req.user, createOrderDto);
+    return this.ordersService.create(req.user as User, createOrderDto);
   }
 
   @Get('all-order')
@@ -33,7 +34,7 @@ export class OrdersController {
 
   @Get()
   findOne(@Req() req: Request) {
-    return this.ordersService.findOne(req.user.user_id);
+    return this.ordersService.findOne((req.user as User).user_id);
   }
 
   @Put(':id/:status')

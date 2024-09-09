@@ -13,6 +13,9 @@ import { JwtService } from '@nestjs/jwt';
 import { MessageRes, UpdateUserRes, UserData } from 'src/types/interfaces';
 import { Order } from 'src/orders/schemas/order.schema';
 import { UtilsService } from 'src/utils/utils.service';
+import { ConfigService } from '@nestjs/config';
+import { OAuth2Client } from 'google-auth-library';
+import { Profile } from 'passport-facebook-token';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +23,7 @@ export class UsersService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Order.name) private orderModel: Model<Order>,
     private readonly jwtService: JwtService,
+    private readonly config: ConfigService,
     private readonly utils: UtilsService,
   ) {}
 
@@ -55,6 +59,60 @@ export class UsersService {
       return { user: result, token: token };
     } else {
       throw new ConflictException('Username is already in use');
+    }
+  }
+
+  async googleLogin(code: string): Promise<UserData> {
+    const client = new OAuth2Client(
+      this.config.get<string>('google.clientId'),
+      this.config.get<string>('google.secretId'),
+      this.config.get<string>('google.redirectUrl'),
+    );
+    const { tokens } = await client.getToken(code);
+    const ticket = await client.verifyIdToken({ idToken: tokens.id_token });
+    const payload = ticket.getPayload();
+    const user = await this.findUser(payload.sub);
+    if (user) {
+      const token = await this.jwtService.signAsync({ user: user });
+      return {
+        user: user,
+        token: token,
+      };
+    } else {
+      const userId = this.utils.generateUuid();
+      const newUser = await new this.userModel({
+        user_id: userId,
+        username: payload.sub,
+        name: payload.name,
+      }).save();
+      const token = await this.jwtService.signAsync({ user: newUser });
+      return {
+        user: newUser,
+        token: token,
+      };
+    }
+  }
+
+  async facebookLogin(userData: Profile): Promise<UserData> {
+    const user = await this.findUser(userData.id);
+    if (user) {
+      const token = await this.jwtService.signAsync({ user: user });
+      return {
+        user: user,
+        token: token,
+      };
+    } else {
+      const userId = this.utils.generateUuid();
+      const newUser = await new this.userModel({
+        user_id: userId,
+        username: userData.id,
+        name: userData.displayName,
+      }).save();
+      const token = await this.jwtService.signAsync({ user: newUser });
+      return {
+        user: newUser,
+        token: token,
+      };
     }
   }
 

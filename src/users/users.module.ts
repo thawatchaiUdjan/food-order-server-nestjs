@@ -6,6 +6,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrdersModule } from 'src/orders/orders.module';
+import { FacebookStrategy } from './strategies/facebook.strategy';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { OrdersModule } from 'src/orders/orders.module';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, FacebookStrategy],
   exports: [UsersService],
 })
 export class UsersModule {}

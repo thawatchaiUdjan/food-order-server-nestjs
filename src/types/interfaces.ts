@@ -1,3 +1,4 @@
+import { Profile } from 'passport-facebook-token';
 import { Food } from 'src/foods/schemas/food.schema';
 import { OrderFood } from 'src/orders/schemas/order-food.schema';
 import { Order } from 'src/orders/schemas/order.schema';
@@ -5,7 +6,7 @@ import { User } from 'src/users/schemas/user.schema';
 
 declare module 'express' {
   export interface Request {
-    user?: User;
+    user?: User | Profile;
     token?: string;
   }
 }
