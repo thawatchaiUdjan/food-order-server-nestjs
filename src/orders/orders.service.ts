@@ -73,10 +73,7 @@ export class OrdersService {
     return this.findFoodOrderByUserId(userId);
   }
 
-  async update(
-    id: string,
-    status: mongoose.Schema.Types.ObjectId,
-  ): Promise<UpdateOrderRes> {
+  async updateStatus(id: string, status: string): Promise<UpdateOrderRes> {
     const result = await this.orderModel.findOneAndUpdate(
       { order_id: id },
       { order_status: status },

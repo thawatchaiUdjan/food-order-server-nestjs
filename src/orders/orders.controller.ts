@@ -38,9 +38,8 @@ export class OrdersController {
   }
 
   @Put(':id/:status')
-  update(@Param('id') id: string, @Param('status') status: string) {
-    const statusId = new mongoose.Schema.Types.ObjectId(status);
-    return this.ordersService.update(id, statusId);
+  updateStatus(@Param('id') id: string, @Param('status') status: string) {
+    return this.ordersService.updateStatus(id, status);
   }
 
   @Delete(':id')
