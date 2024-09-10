@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,11 +11,13 @@ import { Model } from 'mongoose';
 import { Request } from 'express';
 import { CreateFoodRes, MessageRes } from 'src/types/interfaces';
 import { UtilsService } from 'src/utils/utils.service';
+import { OrderFood } from 'src/orders/schemas/order-food.schema';
 
 @Injectable()
 export class FoodsService {
   constructor(
     @InjectModel(Food.name) private foodModel: Model<Food>,
+    @InjectModel(OrderFood.name) private orderFoodModel: Model<OrderFood>,
     private readonly utils: UtilsService,
   ) {}
 
@@ -61,6 +67,10 @@ export class FoodsService {
     updateFoodDto: UpdateFoodDto,
     file: Express.Multer.File,
   ): Promise<CreateFoodRes> {
+    const orderFood = await this.orderFoodModel.findOne({ food_id: id });
+    if (orderFood) {
+      throw new BadRequestException('Food is currently ordered, cannot update');
+    }
     if (file) updateFoodDto.food_image_url = file.path;
     const food = await this.foodModel.findOneAndUpdate(
       { food_id: id },
@@ -80,6 +90,10 @@ export class FoodsService {
   }
 
   async remove(id: string): Promise<MessageRes> {
+    const orderFood = await this.orderFoodModel.findOne({ food_id: id });
+    if (orderFood) {
+      throw new BadRequestException('Food is currently ordered, cannot delete');
+    }
     const food = await this.foodModel.findOneAndDelete({ food_id: id });
     const foodFolder = 'foods';
     if (!food) {
