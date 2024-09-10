@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from 'src/config/config.service';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
@@ -25,14 +25,12 @@ export class UsersGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('jwtSecret'),
+        secret: this.configService.jwtSecret,
       });
       request.user = payload.user;
       request.token = token;
     } catch (err) {
-      if (
-        err.name == this.configService.get<string>('token.tokenExpiredError')
-      ) {
+      if (err.name == this.configService.token.tokenExpiredError) {
         throw new UnauthorizedException('Token has expired');
       } else {
         throw new UnauthorizedException('Invalid token');

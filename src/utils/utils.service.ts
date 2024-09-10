@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from 'src/config/config.service';
 import { Request } from 'express';
 import { cloudinary } from 'src/config/cloudinary.config';
 import { v4 as uuidv4 } from 'uuid';
@@ -11,7 +11,7 @@ export class UtilsService {
   constructor(private readonly configService: ConfigService) {}
 
   async hashPassword(password: string): Promise<string> {
-    const saltRounds = this.configService.get<number>('encryptSaltRounds');
+    const saltRounds = this.configService.encryptSaltRounds;
     const salt = await bcrypt.genSalt(saltRounds);
     return bcrypt.hash(password, salt);
   }

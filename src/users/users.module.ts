@@ -4,9 +4,10 @@ import { UsersController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrdersModule } from 'src/orders/orders.module';
 import { FacebookStrategy } from './strategies/facebook.strategy';
+import { ConfigModule } from 'src/config/config.module';
+import { ConfigService } from 'src/config/config.service';
 
 @Module({
   imports: [
@@ -22,9 +23,9 @@ import { FacebookStrategy } from './strategies/facebook.strategy';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('jwtSecret'),
+        secret: configService.jwtSecret,
         signOptions: {
-          expiresIn: configService.get<string>('token.tokenExpiredTime'),
+          expiresIn: configService.token.tokenExpiredTime,
         },
       }),
     }),

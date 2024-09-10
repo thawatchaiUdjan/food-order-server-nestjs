@@ -13,7 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MessageRes, UpdateUserRes, UserData } from 'src/types/interfaces';
 import { Order } from 'src/orders/schemas/order.schema';
 import { UtilsService } from 'src/utils/utils.service';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from 'src/config/config.service';
 import { OAuth2Client } from 'google-auth-library';
 import { Profile } from 'passport-facebook-token';
 
@@ -64,9 +64,9 @@ export class UsersService {
 
   async googleLogin(code: string): Promise<UserData> {
     const client = new OAuth2Client(
-      this.config.get<string>('google.clientId'),
-      this.config.get<string>('google.secretId'),
-      this.config.get<string>('google.redirectUrl'),
+      this.config.google.clientId,
+      this.config.google.secretId,
+      this.config.google.redirectUrl,
     );
     const { tokens } = await client.getToken(code);
     const ticket = await client.verifyIdToken({ idToken: tokens.id_token });

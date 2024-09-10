@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from 'src/config/config.service';
 import * as passport from 'passport';
 import * as FacebookTokenStrategy from 'passport-facebook-token';
 
@@ -13,8 +13,8 @@ export class FacebookStrategy {
     passport.use(
       new FacebookTokenStrategy(
         {
-          clientID: this.config.get<string>('facebook.clientId'),
-          clientSecret: this.config.get<string>('facebook.secretId'),
+          clientID: this.config.facebook.clientId,
+          clientSecret: this.config.facebook.secretId,
         },
         async (
           accessToken: string,
