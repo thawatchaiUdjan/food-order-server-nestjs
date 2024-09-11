@@ -16,7 +16,7 @@ export class ResponseExceptionFilter implements ExceptionFilter {
       const status = exception.getStatus();
       const message = exception.message;
       response.status(status).json({ message: message });
-      console.log('Error:', exception.getResponse());
+      // console.log('Error:', exception.getResponse());
     } else {
       response.status(500).json({
         message: 'An unexpected error occurred. Please try again later',
