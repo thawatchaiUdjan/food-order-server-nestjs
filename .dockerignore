@@ -1,3 +1,7 @@
-.git
 node_modules
 dist
+npm-debug.log
+dockerfile
+docker-compose.yaml
+.dockerignore
+.git
