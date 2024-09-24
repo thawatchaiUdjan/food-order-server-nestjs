@@ -83,3 +83,25 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+# NestJS REST API Service
+
+## Overview
+
+This repository contains a REST API service built with NestJS, a progressive Node.js framework. It connects to a MongoDB database for data storage and is containerized using Docker for streamlined deployment on Google Cloud Run.
+
+## Features
+
+- **RESTful API**: Implements endpoints for various application functionalities.
+- **MongoDB**: NoSQL database for flexible data storage and retrieval.
+- **Docker**: Containerized application for consistent development and deployment environments.
+- **Google Cloud Run**: Easily deploys on a fully managed serverless platform with automatic scaling and high availability.
+
+## Web Application
+
+This service powers the [Web Application](https://food-order-app-kappa-six.vercel.app) (replace with actual link), providing users with a seamless experience and access to various features offered by the backend.
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+
